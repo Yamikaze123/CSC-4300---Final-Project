@@ -2,12 +2,12 @@
    <!DOCTYPE html>
 <head>
 <title>Final Project</title>
-<script src="https://csc4300-fall2021.github.io/lib/three.js"></script>
-<script src="https://csc4300-fall2021.github.io/lib/OrbitControls.js"></script>
+<script src="three.min.js"></script>
 
     <script>
     
-    var scene, camera, renderer, cloudParticles;
+    var scene, camera, renderer
+    var cloudParticles = [];
 
     var canvas;
 
@@ -19,7 +19,7 @@
         camera.position.set(0,0,1);
 
         // Add orbit control to allow the camera orbit around
-        mouse = new THREE.OrbitControls(camera, renderer.domElement);
+        // mouse = new THREE.OrbitControls(camera, renderer.domElement);
     }
 
     function createLight() {
@@ -38,7 +38,7 @@
     function createScene() {
       scene = new THREE.Scene();
       scene.fog = new THREE.FogExp2(0x11111f, 0.002);
-      rendered.setClearColor(scene.fog.color);
+      renderer.setClearColor(scene.fog.color);
 
       rainGeo = new THREE.Geometry();
       for (let i = 0; i < rainCount; i++) {
@@ -62,9 +62,9 @@
       scene.add(rain);
 
       let loader = new THREE.TextureLoader();
-      loader.load("smoke.png", function(texture) {
+      loader.load("smoke.jpg", function(texture) {
         cloudGeo = new THREE.PlaneBufferGeometry(500, 500);
-        cloudMaterial = new THREE.MeshLamvertMaterial({
+        cloudMaterial = new THREE.MeshLambertMaterial({
           map: texture,
           transparent: true
         });
@@ -106,7 +106,7 @@
       rainGeo.verticesNeedUpdate = true;
       rain.rotation.y += 0.002;
       if(Math.random() > 0.93 || flash.power > 100) {
-        if(flask.power <100)
+        if(flash.power <100)
           flash.position.set(
             Math.random() *400,
             300 + Math.random() *200,
@@ -114,7 +114,7 @@
           );
         flash.power = 50 + Math.random() * 500;
       }
-      renderer.render(scene, camere);
+      renderer.render(scene, camera);
       mouse.update();
       directionalLight.position.set( camera.position.x, camera.position.y, camera.position.z );
     }
@@ -132,18 +132,23 @@
         // create camera
         createCamera();
 
-        // create lights 
-        createLights();
+        
         
         // create scene 
         createScene();
 
-        // render scene
-        render();
+        // create lights 
+        createLight();
     }
 
 
 
-    </script>
-  </body>
+
+</script>
+</head>
+<body onload="init()">
+<div id="canvas-holder">
+    <canvas id="glcanvas" width="600" height="400"></canvas>
+</div>
+</body>
 </html>
